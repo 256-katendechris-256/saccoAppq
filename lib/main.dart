@@ -1,14 +1,22 @@
+import 'package:get_it/get_it.dart';
 import 'package:sacco/main_layout.dart';
 import 'package:sacco/screens/auth_page.dart';
+import 'package:sacco/screens/home_page.dart';
 import 'package:sacco/utils/config.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'Service_Auth/service_file.dart';
+import 'components/login.dart';
+import 'components/register.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
+  );
+  GetIt.instance.registerSingleton<Authentication_service>(
+    Authentication_service(),
   );
   runApp(const MyApp());
 }
@@ -45,13 +53,19 @@ class MyApp extends StatelessWidget {
             elevation: 10,
             type: BottomNavigationBarType.fixed,
           )),
-      initialRoute: '/',
+      initialRoute: 'auth',
       routes: {
         // initial route for the app which is the login page and the signup page
-        '/': (context) => const AuthPage(),
+        'auth': (context) => const AuthPage(),
+        'home': (context) => const HomePage(),
+        'login': (context) => const Login(),
+        'register': (context) => const  RegisterPage (),
         // main layout after login page
         'main': (context) => const MainLayout(),
       },
+
+
+
     );
   }
 }

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:sacco/components/button.dart';
 import 'package:sacco/screens/auth_page.dart';
 import 'package:sacco/utils/config.dart';
 import 'package:sacco/utils/text.dart';
+
+import '../Service_Auth/service_file.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -12,12 +15,21 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  Authentication_service? _Authentication_service;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
+  String? name, email, password;
+
+
+@override
+  void initState() {
+  super.initState();
+  _Authentication_service = GetIt.instance<Authentication_service>();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,12 +61,10 @@ class _RegisterPageState extends State<RegisterPage> {
                     decoration: InputDecoration(
                       labelText: AppText.enText?['username_text'] ?? 'Username',
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your username';
-                      }
-                      return null;
-                    },
+                      onSaved: (value){
+                        name = value;
+                      },
+                      validator:(value) => value!.length> 0? null : "Please enter  name"
                   ),
                   Config.spacesmall,
                   TextFormField(
@@ -62,12 +72,14 @@ class _RegisterPageState extends State<RegisterPage> {
                     decoration: InputDecoration(
                       labelText: AppText.enText?['email_text'] ?? 'Email',
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your email';
+                      onSaved: (value){
+                        email = value;
+                      },
+                      validator:(value){
+                        bool _results = value!.contains(
+                            RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$'));
+                        return _results ? null : "Please enter a valid email";
                       }
-                      return null;
-                    },
                   ),
                   Config.spacesmall,
                   TextFormField(
@@ -76,6 +88,9 @@ class _RegisterPageState extends State<RegisterPage> {
                       labelText: AppText.enText?['password_text'] ?? 'Password',
                     ),
                     obscureText: true,
+                    onChanged: (value){
+                      password = value;
+                    },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your password';
@@ -87,7 +102,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   TextFormField(
                     controller: _confirmPasswordController,
                     decoration: InputDecoration(
-                      labelText: AppText.enText?['confirm_password_text'] ??
+                      labelText: AppText.enText['confirm_password_text'] ??
                           'Confirm Password',
                     ),
                     obscureText: true,
@@ -95,7 +110,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       if (value == null || value.isEmpty) {
                         return 'Please confirm your password';
                       }
-                      if (value != _passwordController.text) {
+                      if (value != password.toString()) {
                         return 'Passwords do not match';
                       }
                       return null;
@@ -105,9 +120,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   Button(
                       width: double.infinity,
                       title: 'Sign Up',
-                      onPressed: () {
-                        Navigator.of(context).pushNamed('main');
-                      },
+                      onPressed: _registerUser,
                       disable: false),
                   Config.spacesmall,
                   Center(
@@ -131,7 +144,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       },
                       child: Text(
                         AppText.enText?['signIn_text'] ?? '',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
                           color: Colors.blue,
@@ -146,5 +159,14 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       ),
     );
+  }
+
+
+  void _registerUser() async {
+    if (_formKey.currentState!.validate()){
+      _formKey.currentState!.save();
+      bool _result =await _Authentication_service!.registerUser(name:name!, password:password!, email:email!);
+      if (_result) Navigator.pop(context);
+    }
   }
 }

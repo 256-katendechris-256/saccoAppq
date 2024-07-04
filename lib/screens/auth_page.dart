@@ -76,9 +76,9 @@ class _AuthPageState extends State<AuthPage> {
                 const SizedBox(height: 20), // Adding a bit more space
                 Column(
                   children: <Widget>[
-                    Row(
+                    const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: const <Widget>[
+                      children: <Widget>[
                         SocialButton(social: 'phone'),
                         SocialButton(social: 'google'),
                       ],
@@ -106,7 +106,7 @@ class _AuthPageState extends State<AuthPage> {
                         },
                         child: Text(
                           AppText.enText?['signup_text'] ?? '',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
                             color: Colors.blue,
