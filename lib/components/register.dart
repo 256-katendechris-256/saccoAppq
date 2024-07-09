@@ -166,7 +166,7 @@ class _RegisterPageState extends State<RegisterPage> {
     if (_formKey.currentState!.validate()){
       _formKey.currentState!.save();
       bool _result =await _Authentication_service!.registerUser(name:name!, password:password!, email:email!);
-      if (_result) Navigator.pop(context);
+      if (_result) Navigator.popAndPushNamed(context, 'login');
     }
   }
 }
