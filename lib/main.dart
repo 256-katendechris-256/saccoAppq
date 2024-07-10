@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sacco/main_layout.dart';
 import 'package:sacco/screens/auth_page.dart';
@@ -18,7 +19,11 @@ Future<void> main() async {
   GetIt.instance.registerSingleton<Authentication_service>(
     Authentication_service(),
   );
-  runApp(const MyApp());
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

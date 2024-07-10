@@ -1,76 +1,76 @@
+
+import 'dart:math';
+import 'package:flutter/material.dart';
+import 'package:flutter_admin_scaffold/admin_scaffold.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:sacco/utils/config.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
 
-  @override
-  State<HomePage> createState() => _HomePageState();
+import 'Pages/add_members.dart';
+import 'Pages/add_sacco.dart';
+import 'Pages/dashboard.dart';
+import 'Pages/items.dart';
+import 'Pages/survey.dart';
+
+// Define the enum for SideBarItem
+enum SideBarItem {
+  dashboard(
+      value: 'Dashboard', iconData: Icons.dashboard, body: DashboardScreen()),
+  sacco_list(value: 'Sacco list', iconData: Icons.business, body: add_saccoPage()),
+  member_list(value: 'Member List', iconData: Icons.card_membership_rounded, body: add_memberPage()),
+  survey(value: 'Survey', iconData: Icons.campaign, body: take_surveypage()),
+  items(value: 'items', iconData: Icons.class_, body: ittemspages());
+
+  const SideBarItem(
+      {required this.value, required this.iconData, required this.body});
+  final String value;
+  final IconData iconData;
+  final Widget body;
 }
 
-class _HomePageState extends State<HomePage> {
-  @override
-  Widget build(BuildContext context) {
-    Config().init(context);
+// Define a provider for the selected SideBarItem
+final sideBarItemProvider = StateProvider<SideBarItem>((ref) => SideBarItem.dashboard);
 
-    final List<Map<String, dynamic>> items = [
-      {'title': 'SACCO List', 'icon': Icons.list},
-      {'title': 'Member List', 'icon': Icons.people},
-      {'title': 'Survey List', 'icon': Icons.book},
-      {'title': 'Item List', 'icon': Icons.inventory},
-      {'title': 'Tasks List', 'icon': Icons.task},
-      {'title': 'Team List', 'icon': Icons.group},
-      {'title': 'Segment List', 'icon': Icons.segment},
-      {'title': 'Contacts', 'icon': Icons.contact_page},
-      {'title': 'Customers', 'icon': Icons.person},
-    ];
+class HomePage extends ConsumerWidget {
+  const HomePage({super.key});
+
+  // Function to get the SideBarItem from AdminMenuItem
+  SideBarItem getSideBarItem(AdminMenuItem item) {
+    for (var value in SideBarItem.values) {
+      if (item.route == value.name) {
+        return value;
+      }
+    }
+    return SideBarItem.dashboard;
+  }
+
+  @override
+
+  Widget build(BuildContext context, WidgetRef ref) {
+    final sideBarItem = ref.watch(sideBarItemProvider);
+    final sideBarKey = GlobalKey<ScaffoldState>();
 
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 20,
-        ),
-        child: SafeArea(
-          child: GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-            ),
-            itemCount: items.length,
-            itemBuilder: (context, index) {
-              return Card(
-                elevation: 5,
-                child: InkWell(
-                  onTap: () {
-                    // Handle card tap
-                  },
-                  child: Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Icon(
-                          items[index]['icon'],
-                          size: 50,
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          items[index]['title'],
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
+      key: sideBarKey,
+      appBar: AppBar(title: const Text('welcome to Kambascco Admin Dashboard')),
+      drawer: SideBar(
+        activeBackgroundColor: Colors.white,
+        onSelected: (item) {
+          ref.read(sideBarItemProvider.notifier).update((state) => getSideBarItem(item));
+          sideBarKey.currentState?.openEndDrawer(); // Close the drawer
+        },
+        items: SideBarItem.values
+            .map((e) => AdminMenuItem(
+            title: e.value, icon: e.iconData, route: e.name))
+            .toList(),
+        selectedRoute: sideBarItem.name,
+      ),
+      body: ProviderScope(
+        overrides: const [],
+        child: sideBarItem.body,
+
+
       ),
     );
   }
