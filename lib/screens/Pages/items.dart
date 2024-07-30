@@ -6,11 +6,10 @@ class ittemspages extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const Center(
-      child: Text(
-        'items Screen',
-        style: TextStyle(fontSize: 24),
-      ),
+    return const Scaffold(
+    body: Center(
+      child: Text('Loan Page APP'),
+    ),
     );
   }
 }

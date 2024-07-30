@@ -3,24 +3,27 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_admin_scaffold/admin_scaffold.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-
 import 'Pages/add_members.dart';
 import 'Pages/add_sacco.dart';
 import 'Pages/dashboard.dart';
 import 'Pages/items.dart';
+
+import 'Pages/questions.darts.dart';
 import 'Pages/survey.dart';
 
 // Define the enum for SideBarItem
 enum SideBarItem {
   dashboard(
       value: 'Dashboard', iconData: Icons.dashboard, body: DashboardScreen()),
-  sacco_list(value: 'Sacco list', iconData: Icons.business, body: add_saccoPage()),
-  member_list(value: 'Member List', iconData: Icons.card_membership_rounded, body: add_memberPage()),
-  survey(value: 'Survey', iconData: Icons.campaign, body: take_surveypage()),
-  items(value: 'items', iconData: Icons.class_, body: ittemspages());
+  sacco_list(value: 'Sacco list', iconData: Icons.business, body: SaccolistPage()),
+  member_list(value: 'Member List', iconData: Icons.card_membership_rounded, body: MemberPage()),
+  survey(value: 'Survey', iconData: Icons.campaign, body: SurveyListPage ()),
+  apply(value: 'apply4loan', iconData: Icons.campaign, body: QuestionnairePage()),
+ ;
 
-  const SideBarItem(
+
+
+   const SideBarItem(
       {required this.value, required this.iconData, required this.body});
   final String value;
   final IconData iconData;
@@ -51,7 +54,7 @@ class HomePage extends ConsumerWidget {
 
     return Scaffold(
       key: sideBarKey,
-      appBar: AppBar(title: const Text('welcome to Kambascco Admin Dashboard')),
+      appBar: AppBar(title: const Text('welcome to Kambascco Dashboard')),
       drawer: SideBar(
         activeBackgroundColor: Colors.white,
         onSelected: (item) {
@@ -65,7 +68,7 @@ class HomePage extends ConsumerWidget {
         selectedRoute: sideBarItem.name,
       ),
       body: ProviderScope(
-        overrides: const [],
+        overrides:  [],
         child: sideBarItem.body,
 
 

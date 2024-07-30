@@ -1,6 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sacco/main_layout.dart';
+import 'package:sacco/screens/Pages/add_survey.dart';
+import 'package:sacco/screens/Pages/items.dart';
+import 'package:sacco/screens/Pages/questions.darts.dart';
 import 'package:sacco/screens/auth_page.dart';
 import 'package:sacco/screens/home_page.dart';
 import 'package:sacco/utils/config.dart';
@@ -39,6 +42,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
+
           inputDecorationTheme: const InputDecorationTheme(
             focusColor: Config.primsryColor,
             border: Config.OutlinedBorder,
@@ -60,13 +64,16 @@ class MyApp extends StatelessWidget {
           )),
       initialRoute: 'home',
       routes: {
-        // initial route for the app which is the login page and the signup page
+
         'auth': (context) => const AuthPage(),
         'home': (context) => const HomePage(),
         'login': (context) => const Login(),
         'register': (context) => const  RegisterPage (),
-        // main layout after login page
+        "GetAlOAN" : (context) => QuestionnairePage(),
         'main': (context) => const MainLayout(),
+        'items': (context) => const  ittemspages(),
+        'add_survey': (context) => const  add_survey (),
+
       },
 
 
