@@ -21,7 +21,6 @@ class _LoginState extends State<Login> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _Authentication_service = GetIt.instance<Authentication_service>();
   }
@@ -29,90 +28,95 @@ class _LoginState extends State<Login> {
   bool obsecurePass = true;
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          TextFormField(
-            controller: emailController,
-            keyboardType: TextInputType.emailAddress,
-            cursorColor: Config.primsryColor,
-            decoration: const InputDecoration(
-              hintText: 'Email address',
-              labelText: 'Email address',
-              alignLabelWithHint: true,
-              prefixIcon: Icon(Icons.email_outlined),
-              prefixIconColor: Config.primsryColor,
-
-            ),
-              onSaved: (value){
-               _email= value;
-              },
-              validator:(value){
-                bool _results = value!.contains(
-                    RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$'));
-                return _results ? null : "Please enter a valid email";
-              }
-          ),
-          Config.spacesmall,
-          TextFormField(
-            controller: passController,
-            keyboardType: TextInputType.visiblePassword,
-            cursorColor: Config.primsryColor,
-            obscureText: obsecurePass,
-            decoration: InputDecoration(
-                hintText: 'password',
-                labelText: 'password',
-                alignLabelWithHint: true,
-                prefixIcon: const Icon(Icons.lock_outline),
-                prefixIconColor: Config.primsryColor,
-                suffixIcon: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        obsecurePass = !obsecurePass;
-                      });
+    return SafeArea(
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  TextFormField(
+                    controller: emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    cursorColor: Config.primsryColor,
+                    decoration: const InputDecoration(
+                      hintText: 'Email address',
+                      labelText: 'Email address',
+                      alignLabelWithHint: true,
+                      prefixIcon: Icon(Icons.email_outlined),
+                      prefixIconColor: Config.primsryColor,
+                    ),
+                    onSaved: (value) {
+                      _email = value;
                     },
-                    icon: obsecurePass
-                        ? const Icon(
-                            Icons.visibility_off_outlined,
-                            color: Colors.black38,
-                          )
-                        : const Icon(
-                            Icons.visibility_outlined,
-                            color: Config.primsryColor,
-                          ))),
-            onSaved: (value) {
-              _password = value;
-            },
-            validator: (value) =>
-            value!.length > 6 ? null : "Please enter a password with at least six characters",
-            enableInteractiveSelection: true,
-
+                    validator: (value) {
+                      bool _results = value!.contains(
+                          RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$'));
+                      return _results ? null : "Please enter a valid email";
+                    },
+                  ),
+                  Config.spacesmall,
+                  TextFormField(
+                    controller: passController,
+                    keyboardType: TextInputType.visiblePassword,
+                    cursorColor: Config.primsryColor,
+                    obscureText: obsecurePass,
+                    decoration: InputDecoration(
+                      hintText: 'password',
+                      labelText: 'password',
+                      alignLabelWithHint: true,
+                      prefixIcon: const Icon(Icons.lock_outline),
+                      prefixIconColor: Config.primsryColor,
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            obsecurePass = !obsecurePass;
+                          });
+                        },
+                        icon: obsecurePass
+                            ? const Icon(
+                          Icons.visibility_off_outlined,
+                          color: Colors.black38,
+                        )
+                            : const Icon(
+                          Icons.visibility_outlined,
+                          color: Config.primsryColor,
+                        ),
+                      ),
+                    ),
+                    onSaved: (value) {
+                      _password = value;
+                    },
+                    validator: (value) =>
+                    value!.length > 6 ? null : "Please enter a password with at least six characters",
+                    enableInteractiveSelection: true,
+                  ),
+                  Config.spacesmall,
+                  Button(
+                    width: double.infinity,
+                    title: 'Sign in',
+                    onPressed: () {
+                      _loginUser();
+                    },
+                    disable: false,
+                  ),
+                ],
+              ),
+            ),
           ),
-          Config.spacesmall,
-
-
-          Button(
-              width: double.infinity,
-              title: 'Sign in',
-              onPressed: () {
-                _loginUser();
-              },
-              disable: false)
-        ],
+        ),
       ),
     );
   }
 
-
-
-  _loginUser() async{
-    if(_formKey.currentState!.validate()){
+  _loginUser() async {
+    if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       bool _results = await _Authentication_service!.loginUser(email: _email!, password: _password!);
-      if(_results) Navigator.popAndPushNamed(context, 'home');
-
+      if (_results) Navigator.popAndPushNamed(context, 'home');
     }
   }
 }
