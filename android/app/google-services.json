@@ -12,7 +12,12 @@
           "package_name": "com.example.sacco"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "419925464646-4ilcvrd9e5qm2umk9dsb6c4773vp990i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyA0I7GuE9LbUALi0HgGQ5_-1u0PElvYy9U"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "419925464646-4ilcvrd9e5qm2umk9dsb6c4773vp990i.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "419925464646-0tv0515pou2firlsgukki90ffra5b6g4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.sacco"
+              }
+            }
+          ]
         }
       }
     }

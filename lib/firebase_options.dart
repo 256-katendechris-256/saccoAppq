@@ -69,6 +69,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '419925464646',
     projectId: 'chris101-zj0evi',
     storageBucket: 'chris101-zj0evi.appspot.com',
+    iosClientId: '419925464646-0tv0515pou2firlsgukki90ffra5b6g4.apps.googleusercontent.com',
     iosBundleId: 'com.example.sacco',
   );
+
 }

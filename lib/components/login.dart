@@ -1,9 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sacco/components/button.dart';
+import 'package:sacco/components/register.dart';
 import 'package:sacco/utils/config.dart';
 import 'package:flutter/material.dart';
-
+import 'package:sacco/components/social_button.dart';
+import 'package:sign_in_button/sign_in_button.dart';
 import '../Service_Auth/service_file.dart';
+import '../screens/home_page.dart';
+import '../utils/text.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -13,6 +18,8 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  User? _user;//keep track of the current user
   Authentication_service? _Authentication_service;
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
@@ -23,6 +30,11 @@ class _LoginState extends State<Login> {
   void initState() {
     super.initState();
     _Authentication_service = GetIt.instance<Authentication_service>();
+    _auth.authStateChanges().listen((event){
+      setState(() {
+        _user = event;
+      });
+    });
   }
 
   bool obsecurePass = true;
@@ -38,6 +50,32 @@ class _LoginState extends State<Login> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
+                  Text(
+                    AppText.enText?['welcome_text'] ?? '',
+                    style: const TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Config.spacesmall,
+                  Center(
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomePage()),
+                        );
+                      },
+                      child: Text(
+                        AppText.enText?['signIn_text'] ?? '',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Config.spacesmall,
                   TextFormField(
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
@@ -103,10 +141,49 @@ class _LoginState extends State<Login> {
                     },
                     disable: false,
                   ),
+                  Center(
+                    child: TextButton(
+                      onPressed: () {
+                        // forgot password logic
+                      },
+                      child: Text(
+                        AppText.enText?['forgot_password'] ?? '',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  /*Button(
+                    width: double.infinity,
+                    title: 'Google',
+                    onPressed: () {
+                    //  _loginUser();
+                    },
+                    disable: false,
+                  ),*/
+                  _user != null ? _userInfo() : _googleSignInButton(),
+
+
                 ],
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+  Widget _googleSignInButton(){
+    return Center(
+      child: SizedBox(
+        height: 50,
+        child: SignInButton(
+          Buttons.google,
+          text: "Sign in with Google",
+          onPressed: _handleGoogleSignIn,
         ),
       ),
     );
@@ -117,6 +194,23 @@ class _LoginState extends State<Login> {
       _formKey.currentState!.save();
       bool _results = await _Authentication_service!.loginUser(email: _email!, password: _password!);
       if (_results) Navigator.popAndPushNamed(context, 'home');
+    }
+  }
+
+  _userInfo() {
+    return SizedBox.fromSize();
+  }
+
+  void _handleGoogleSignIn(){
+    try{
+      GoogleAuthProvider _googleAuthProvider = GoogleAuthProvider();
+      _auth.signInWithProvider(_googleAuthProvider);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    }catch(error){
+      print(error);
     }
   }
 }

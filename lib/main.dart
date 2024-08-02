@@ -62,7 +62,7 @@ class MyApp extends StatelessWidget {
             elevation: 10,
             type: BottomNavigationBarType.fixed,
           )),
-      initialRoute: 'home',
+      initialRoute: 'login',
       routes: {
 
         'auth': (context) => const AuthPage(),
