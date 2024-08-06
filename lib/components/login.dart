@@ -201,10 +201,10 @@ class _LoginState extends State<Login> {
     return SizedBox.fromSize();
   }
 
-  void _handleGoogleSignIn(){
+  void _handleGoogleSignIn() async{
     try{
       GoogleAuthProvider _googleAuthProvider = GoogleAuthProvider();
-      _auth.signInWithProvider(_googleAuthProvider);
+      await _auth.signInWithProvider(_googleAuthProvider);
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => HomePage()),
